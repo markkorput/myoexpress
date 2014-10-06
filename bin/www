@@ -12,10 +12,13 @@ var server = app.listen(app.get('port'), function() {
 var io = require('socket.io')(server);
 
 io.on('connection', function (socket) {
-    console.log('socket.io#connection');
+  console.log('socket.io#connection');
   socket.emit('news', { hello: 'world' });
   socket.on('my other event', function (data) {
     console.log(data);
   });
 });
 
+var clientSocket = require('./myoClient');
+
+console.log('ready');
