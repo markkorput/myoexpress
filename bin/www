@@ -19,6 +19,16 @@ io.on('connection', function (socket) {
   });
 });
 
-var clientSocket = require('./myoClient');
+var myo = require('./myoClient');
 
-console.log('ready');
+myo.on('message', function(message){
+  json = JSON.parse(message);
+
+  if (json[0] != "event")
+    return console.log(message);
+
+  var data = json[1]
+  if (data.type == "orientation"){
+    io.emit('myo-orientation', data);
+  }
+});

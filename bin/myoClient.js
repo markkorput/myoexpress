@@ -6,21 +6,6 @@
 
   socket = new WebSocket('ws://localhost:7204/myo/1');
 
-  socket.on('message', function(message) {
-    var data, json, myoID;
-    json = JSON.parse(message);
-    if (json[0] !== "event") {
-      return console.log(message);
-    }
-    data = json[1];
-    if (data.type === "connected") {
-      myoID = data.myo;
-    }
-    if (data.type !== "orientation") {
-      return console.log(data);
-    }
-  });
-
   module.exports = socket;
 
 }).call(this);
