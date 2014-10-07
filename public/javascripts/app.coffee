@@ -55,9 +55,7 @@ class App
     @myoManager = new MyoManager();
     @recorder = new MyoRecorder();
     @recorder.setup(myo_manager: @myoManager)
-    @recorder.on 'add', (model) ->
-      console.log 'new recorder record object'
-      console.log model
+    @visualizer = new MyoVisualizer(myo_recorder: @recorder, scene: @scene)
 
     $(window).on('keydown', @_keyDown).mousemove(@_mouseMove)#.on('resize', @_resize)
 
@@ -81,14 +79,14 @@ class App
   createScene: ->
     scene = new THREE.Scene()
 
-    @targets = new Targets
-      dimensions: new THREE.Vector2(26,10),
-      position: new THREE.Vector3(-2500, -900, -1000),
-      cell_size: new THREE.Vector3(200, 200, 10),
-      materials: [new THREE.MeshBasicMaterial({color: 0xffbb00}), new THREE.MeshBasicMaterial({color: 0xcc9900}), new THREE.MeshBasicMaterial({color: 0xddaa00})]
-
-    # targets.boxes()[3].material.color.setHex(0xff0f0f)
-    @targets.addBoxesToScene(scene)
+    # @targets = new Targets
+    #   dimensions: new THREE.Vector2(26,10),
+    #   position: new THREE.Vector3(-2500, -900, -1000),
+    #   cell_size: new THREE.Vector3(200, 200, 10),
+    #   materials: [new THREE.MeshBasicMaterial({color: 0xffbb00}), new THREE.MeshBasicMaterial({color: 0xcc9900}), new THREE.MeshBasicMaterial({color: 0xddaa00})]
+# 
+    # # targets.boxes()[3].material.color.setHex(0xff0f0f)
+    # @targets.addBoxesToScene(scene)
 
     return scene
 

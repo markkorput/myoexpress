@@ -7,7 +7,11 @@
       return this.myo_manager = this.opts.myo_manager;
     },
     record: function() {
-      return this.add(this.myo_manager.getLastMyoData());
+      var data;
+      data = this.myo_manager.getLastMyoData();
+      if (data !== {} && (this.length < 1 || data.orientation !== this.last().get('orientation'))) {
+        return this.add(this.myo_manager.getLastMyoData());
+      }
     }
   });
 

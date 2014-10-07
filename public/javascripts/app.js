@@ -124,9 +124,9 @@
       this.recorder.setup({
         myo_manager: this.myoManager
       });
-      this.recorder.on('add', function(model) {
-        console.log('new recorder record object');
-        return console.log(model);
+      this.visualizer = new MyoVisualizer({
+        myo_recorder: this.recorder,
+        scene: this.scene
       });
       return $(window).on('keydown', this._keyDown).mousemove(this._mouseMove);
     };
@@ -154,21 +154,6 @@
     App.prototype.createScene = function() {
       var scene;
       scene = new THREE.Scene();
-      this.targets = new Targets({
-        dimensions: new THREE.Vector2(26, 10),
-        position: new THREE.Vector3(-2500, -900, -1000),
-        cell_size: new THREE.Vector3(200, 200, 10),
-        materials: [
-          new THREE.MeshBasicMaterial({
-            color: 0xffbb00
-          }), new THREE.MeshBasicMaterial({
-            color: 0xcc9900
-          }), new THREE.MeshBasicMaterial({
-            color: 0xddaa00
-          })
-        ]
-      });
-      this.targets.addBoxesToScene(scene);
       return scene;
     };
 

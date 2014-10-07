@@ -6,4 +6,7 @@
     @myo_manager = @opts.myo_manager
 
   record: ->
-    @add(@myo_manager.getLastMyoData())
+    data = @myo_manager.getLastMyoData()
+
+    if(data != {} && (@length < 1 || data.orientation != @last().get('orientation')))
+      @add(@myo_manager.getLastMyoData())
