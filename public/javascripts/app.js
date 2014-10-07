@@ -115,7 +115,8 @@
 
     App.prototype.init = function() {
       this.scene = this.createScene();
-      return this.initVfx();
+      this.initVfx();
+      return this.myoManager = new MyoManager();
     };
 
     App.prototype.initVfx = function() {

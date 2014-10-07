@@ -19,6 +19,14 @@ io.on('connection', function (socket) {
   });
 });
 
+var dummyEmit = function(){
+  console.log('Emitting dummy data...');
+  io.sockets.emit('myo-orientation', {orientation: {x: Math.random(), y: Math.random(), z: Math.random()}});
+  setTimeout(dummyEmit, 5000);
+}
+
+dummyEmit();
+
 /*var myo = require('./myoClient');
 
 myo.on('message', function(message){

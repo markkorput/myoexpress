@@ -52,6 +52,7 @@ class App
   init: ->
     @scene = @createScene()
     @initVfx()
+    @myoManager = new MyoManager();
 
   initVfx: ->
     # @camera = new THREE.OrthographicCamera(-1200, 1000, -1100, 1200, 10, 10000)
@@ -94,4 +95,4 @@ jQuery(document).ready ->
   window.app = new App()
   window.app.init()
   window.drawFrame()
-  console.log('page loaded ok')
+  console.log('page loaded ok') 
