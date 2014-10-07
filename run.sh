@@ -1,2 +1,2 @@
-# npm start
-nodemon app
+npm start
+#nodemon app

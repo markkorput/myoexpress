@@ -85,13 +85,13 @@ class App
     @renderer.render(@scene, @camera)
 
 
+jQuery(document).ready ->
+  window.drawFrame = ->
+    requestAnimationFrame(drawFrame)
+    app.update()
+    app.draw()
 
-drawFrame = ->
-  requestAnimationFrame(drawFrame)
-  app.update()
-  app.draw()
-
-window.app = new App()
-window.app.init()
-drawFrame()
-console.log('ok')
+  window.app = new App()
+  window.app.init()
+  window.drawFrame()
+  console.log('page loaded ok')
