@@ -56,11 +56,14 @@ class App
     @recorder = new MyoRecorder();
     @recorder.setup(myo_manager: @myoManager)
     @visualizer = new MyoVisualizer(myo_recorder: @recorder, scene: @scene)
+    @clock = new THREE.Clock()
+    @controls = new THREE.TrackballControls( @camera, @renderer.domElement )
 
     $(window).on('keydown', @_keyDown).mousemove(@_mouseMove)#.on('resize', @_resize)
 
   update: ->
     return if @paused
+    @controls.update( @clock.getDelta() );
 
   draw: ->
     @renderer.render(@scene, @camera)

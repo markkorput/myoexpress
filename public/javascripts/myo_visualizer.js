@@ -18,7 +18,6 @@
         mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(orientation.x, orientation.y, orientation.z);
         mesh.position.multiply(new THREE.Vector3(300, 300, 300));
-        console.log(mesh.position);
         _this.meshes << mesh;
         return _this.scene.add(mesh);
       });

@@ -128,13 +128,16 @@
         myo_recorder: this.recorder,
         scene: this.scene
       });
+      this.clock = new THREE.Clock();
+      this.controls = new THREE.TrackballControls(this.camera, this.renderer.domElement);
       return $(window).on('keydown', this._keyDown).mousemove(this._mouseMove);
     };
 
     App.prototype.update = function() {
       if (this.paused) {
-
+        return;
       }
+      return this.controls.update(this.clock.getDelta());
     };
 
     App.prototype.draw = function() {
