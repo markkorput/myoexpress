@@ -10,9 +10,12 @@
       var _this = this;
       this.socket = io.connect('http://localhost');
       return this.socket.on('myo-orientation', function(data) {
-        console.log('myo-orientation');
-        return console.log(data);
+        return _this.lastMyoData = data;
       });
+    };
+
+    MyoManager.prototype.getLastMyoData = function() {
+      return this.lastMyoData || {};
     };
 
     return MyoManager;

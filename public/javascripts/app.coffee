@@ -53,6 +53,19 @@ class App
     @scene = @createScene()
     @initVfx()
     @myoManager = new MyoManager();
+    @recorder = new MyoRecorder();
+    @recorder.setup(myo_manager: @myoManager)
+    @recorder.on 'add', (model) ->
+      console.log 'new recorder record object'
+      console.log model
+
+    $(window).on('keydown', @_keyDown).mousemove(@_mouseMove)#.on('resize', @_resize)
+
+  update: ->
+    return if @paused
+
+  draw: ->
+    @renderer.render(@scene, @camera)
 
   initVfx: ->
     # @camera = new THREE.OrthographicCamera(-1200, 1000, -1100, 1200, 10, 10000)
@@ -79,11 +92,13 @@ class App
 
     return scene
 
-  update: ->
-    return if @paused
+  _resize: ->
+    console.log 'TODO; _resize'
 
-  draw: ->
-    @renderer.render(@scene, @camera)
+  _keyDown: (e) =>
+    console.log 'keycode: ' + e.keyCode
+    if(e.keyCode == 32)
+      @recorder.record()
 
 
 jQuery(document).ready ->

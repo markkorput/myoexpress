@@ -7,5 +7,9 @@ class @MyoManager
     @socket = io.connect 'http://localhost'
 
     @socket.on 'myo-orientation', (data) =>
-      console.log 'myo-orientation' 
-      console.log data
+      @lastMyoData = data
+    #   console.log 'myo-orientation' 
+    #   console.log data
+
+  getLastMyoData: ->
+    @lastMyoData || {}
