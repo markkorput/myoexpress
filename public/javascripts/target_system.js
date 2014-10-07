@@ -10,47 +10,39 @@
     model: TargetModel
   });
 
-  this.TargetSystem = (function() {
-    function TargetSystem(opts) {
+  this.TargetSystem = Backbone.Model.extend({
+    initialize: function(opts) {
       var _this = this;
-      this.options = opts;
-      this.myo_recorder = this.options.myo_recorder;
+      this.myo_recorder = this.get('myo_recorder');
       this.targets = new TargetCollection();
       this.newTarget();
-      this.myo_recorder.on('add', function(myo_record) {
+      return this.myo_recorder.on('add', function(myo_record) {
         return myo_record.set({
           target: _this.activeTarget().get('name')
         });
       });
-    }
-
-    TargetSystem.prototype.newTarget = function() {
+    },
+    newTarget: function() {
       this.targets.add({
         name: 'Target #' + (this.targets.length + 1)
       });
-      return this.activeTargetIndex = this.targets.length - 1;
-    };
-
-    TargetSystem.prototype.activeTarget = function() {
-      return this.targets.at(this.activeTargetIndex);
-    };
-
-    TargetSystem.prototype.prevTarget = function() {
-      this.activeTargetIndex -= 1;
-      if (this.activeTargetIndex < 0) {
-        return this.activeTargetIndex = this.targets.length - 1;
-      }
-    };
-
-    TargetSystem.prototype.nextTarget = function() {
-      this.activeTargetIndex += 1;
-      if (this.activeTargetIndex >= this.target.length) {
-        return this.activeTargetIndex = 0;
-      }
-    };
-
-    return TargetSystem;
-
-  })();
+      return this.set({
+        activeTargetIndex: this.targets.length - 1
+      });
+    },
+    activeTarget: function() {
+      return this.targets.at(this.get('activeTargetIndex'));
+    },
+    prevTarget: function() {
+      return this.set({
+        activeTargetIndex: Math.abs((this.get('activeTargetIndex') - 1) % this.targets.length)
+      });
+    },
+    nextTarget: function() {
+      return this.set({
+        activeTargetIndex: Math.abs((this.get('activeTargetIndex') + 1) % this.targets.length)
+      });
+    }
+  });
 
 }).call(this);

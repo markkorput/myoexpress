@@ -7,6 +7,9 @@ class App
     @recorder.setup(myo_manager: @myoManager)
     @target_system = new TargetSystem(myo_recorder: @recorder)
     @visualizer = new MyoVisualizer(myo_recorder: @recorder, scene: @scene)
+    @target_system.on 'change:activeTargetIndex', (obj, value, attr) =>
+      @visualizer.set(highlight: @target_system.activeTarget().get('name'))
+
     @clock = new THREE.Clock()
     @controls = new THREE.TrackballControls( @camera, @renderer.domElement )
 
@@ -48,7 +51,7 @@ class App
     if(e.keyCode == 188) # ',' / '<'
       @target_system.prevTarget()
 
-    if(e.keyCode == 78) # '.' / '>'
+    if(e.keyCode == 190) # '.' / '>'
       @target_system.nextTarget()
 
 jQuery(document).ready ->

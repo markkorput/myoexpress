@@ -6,10 +6,9 @@ TargetCollection = Backbone.Collection.extend
   model: TargetModel
 
 
-class @TargetSystem
-  constructor: (opts) ->
-    @options = opts
-    @myo_recorder = @options.myo_recorder
+@TargetSystem = Backbone.Model.extend
+  initialize: (opts) ->
+    @myo_recorder = @get 'myo_recorder'
 
     @targets = new TargetCollection()
     @newTarget()
@@ -18,16 +17,16 @@ class @TargetSystem
       myo_record.set(target: @activeTarget().get('name'))
 
   newTarget: ->
+    # console.log 'Adding: '+ 'Target #'+(@targets.length+1)
     @targets.add(name: 'Target #'+(@targets.length+1))
-    @activeTargetIndex = @targets.length-1
+    # console.log 'new index: '+(@targets.length-1)
+    @set(activeTargetIndex: @targets.length-1)
 
   activeTarget: ->
-    @targets.at(@activeTargetIndex)
+    @targets.at(@get('activeTargetIndex'))
 
   prevTarget: ->
-    @activeTargetIndex -= 1
-    @activeTargetIndex = @targets.length-1 if @activeTargetIndex < 0
+    @set(activeTargetIndex: Math.abs((@get('activeTargetIndex') - 1) % @targets.length))
 
   nextTarget: ->
-    @activeTargetIndex += 1
-    @activeTargetIndex = 0 if @activeTargetIndex >= @target.length
+    @set(activeTargetIndex: Math.abs((@get('activeTargetIndex') + 1) % @targets.length))

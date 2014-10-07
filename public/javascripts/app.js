@@ -9,6 +9,7 @@
     }
 
     App.prototype.init = function() {
+      var _this = this;
       this.scene = this.createScene();
       this.initVfx();
       this.myoManager = new MyoManager();
@@ -22,6 +23,11 @@
       this.visualizer = new MyoVisualizer({
         myo_recorder: this.recorder,
         scene: this.scene
+      });
+      this.target_system.on('change:activeTargetIndex', function(obj, value, attr) {
+        return _this.visualizer.set({
+          highlight: _this.target_system.activeTarget().get('name')
+        });
       });
       this.clock = new THREE.Clock();
       this.controls = new THREE.TrackballControls(this.camera, this.renderer.domElement);
@@ -70,7 +76,7 @@
       if (e.keyCode === 188) {
         this.target_system.prevTarget();
       }
-      if (e.keyCode === 78) {
+      if (e.keyCode === 190) {
         return this.target_system.nextTarget();
       }
     };
