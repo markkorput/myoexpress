@@ -16,6 +16,9 @@
       this.recorder.setup({
         myo_manager: this.myoManager
       });
+      this.target_system = new TargetSystem({
+        myo_recorder: this.recorder
+      });
       this.visualizer = new MyoVisualizer({
         myo_recorder: this.recorder,
         scene: this.scene
@@ -59,7 +62,16 @@
     App.prototype._keyDown = function(e) {
       console.log('keycode: ' + e.keyCode);
       if (e.keyCode === 32) {
-        return this.recorder.record();
+        this.recorder.record();
+      }
+      if (e.keyCode === 78) {
+        this.target_system.newTarget();
+      }
+      if (e.keyCode === 188) {
+        this.target_system.prevTarget();
+      }
+      if (e.keyCode === 78) {
+        return this.target_system.nextTarget();
       }
     };
 

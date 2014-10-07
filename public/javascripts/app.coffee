@@ -5,6 +5,7 @@ class App
     @myoManager = new MyoManager();
     @recorder = new MyoRecorder();
     @recorder.setup(myo_manager: @myoManager)
+    @target_system = new TargetSystem(myo_recorder: @recorder)
     @visualizer = new MyoVisualizer(myo_recorder: @recorder, scene: @scene)
     @clock = new THREE.Clock()
     @controls = new THREE.TrackballControls( @camera, @renderer.domElement )
@@ -38,9 +39,17 @@ class App
 
   _keyDown: (e) =>
     console.log 'keycode: ' + e.keyCode
-    if(e.keyCode == 32)
+    if(e.keyCode == 32) # space
       @recorder.record()
 
+    if(e.keyCode == 78) # 'n'
+      @target_system.newTarget()
+
+    if(e.keyCode == 188) # ',' / '<'
+      @target_system.prevTarget()
+
+    if(e.keyCode == 78) # '.' / '>'
+      @target_system.nextTarget()
 
 jQuery(document).ready ->
   window.drawFrame = ->
