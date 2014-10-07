@@ -17,7 +17,7 @@
         material = new THREE.LineBasicMaterial();
         mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(orientation.x, orientation.y, orientation.z);
-        mesh.position.multiply(new THREE.Vector3(300, 300, 300));
+        mesh.position.multiply(new THREE.Vector3(500, 500, 500));
         _this.meshes << mesh;
         return _this.scene.add(mesh);
       });
