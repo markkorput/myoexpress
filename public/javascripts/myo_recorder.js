@@ -12,6 +12,17 @@
       if (data !== {} && (this.length < 1 || data.orientation !== this.last().get('orientation'))) {
         return this.add(this.myo_manager.getLastMyoData());
       }
+    },
+    autoRecDelay: function() {
+      return this.autoRecordDelay || this.opts.autoRecordDelay || 1000;
+    },
+    update: function() {
+      var t;
+      t = (new Date()).getTime();
+      if (!this.lastAutoRecord || t > this.lastAutoRecord + this.autoRecDelay()) {
+        this.record();
+        return this.lastAutoRecord = t;
+      }
     }
   });
 

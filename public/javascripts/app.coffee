@@ -2,9 +2,10 @@ class App
   init: ->
     @scene = @createScene()
     @initVfx()
+
     @myoManager = new MyoManager();
     @recorder = new MyoRecorder();
-    @recorder.setup(myo_manager: @myoManager)
+    @recorder.setup(myo_manager: @myoManager, autoRecordDelay: 500)
     @target_system = new TargetSystem(myo_recorder: @recorder)
     @visualizer = new MyoVisualizer(myo_recorder: @recorder, scene: @scene)
     @target_system.on 'change:activeTargetIndex', (obj, value, attr) =>
@@ -12,12 +13,13 @@ class App
 
     @clock = new THREE.Clock()
     @controls = new THREE.TrackballControls( @camera, @renderer.domElement )
-
+    @initGui()    
     $(window).on('keydown', @_keyDown).mousemove(@_mouseMove)#.on('resize', @_resize)
 
   update: ->
     return if @paused
     @controls.update( @clock.getDelta() );
+    @recorder.update()
 
   draw: ->
     @renderer.render(@scene, @camera)
@@ -53,6 +55,24 @@ class App
 
     if(e.keyCode == 190) # '.' / '>'
       @target_system.nextTarget()
+
+    if(e.keyCode == 67) # 'c'
+      while r = @recorder.first()
+        @recorder.remove(r)
+
+  initGui: ->
+    @gui = new dat.GUI() # ({autoPlace:true});
+
+    @gui_values = new ->
+      @timer = 0
+      @delay = 500
+
+    folder = @gui.addFolder 'Elements'
+    item = folder.add(@gui_values, 'timer', 0, 1)
+    item = folder.add(@gui_values, 'delay', 0, 5000)
+    item.onChange (val) => @recorder.autoRecordDelay = val
+    folder.open()
+
 
 jQuery(document).ready ->
   window.drawFrame = ->

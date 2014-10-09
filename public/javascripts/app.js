@@ -15,7 +15,8 @@
       this.myoManager = new MyoManager();
       this.recorder = new MyoRecorder();
       this.recorder.setup({
-        myo_manager: this.myoManager
+        myo_manager: this.myoManager,
+        autoRecordDelay: 500
       });
       this.target_system = new TargetSystem({
         myo_recorder: this.recorder
@@ -31,6 +32,7 @@
       });
       this.clock = new THREE.Clock();
       this.controls = new THREE.TrackballControls(this.camera, this.renderer.domElement);
+      this.initGui();
       return $(window).on('keydown', this._keyDown).mousemove(this._mouseMove);
     };
 
@@ -38,7 +40,8 @@
       if (this.paused) {
         return;
       }
-      return this.controls.update(this.clock.getDelta());
+      this.controls.update(this.clock.getDelta());
+      return this.recorder.update();
     };
 
     App.prototype.draw = function() {
@@ -66,6 +69,7 @@
     };
 
     App.prototype._keyDown = function(e) {
+      var r, _results;
       console.log('keycode: ' + e.keyCode);
       if (e.keyCode === 32) {
         this.recorder.record();
@@ -77,8 +81,32 @@
         this.target_system.prevTarget();
       }
       if (e.keyCode === 190) {
-        return this.target_system.nextTarget();
+        this.target_system.nextTarget();
       }
+      if (e.keyCode === 67) {
+        _results = [];
+        while (r = this.recorder.first()) {
+          _results.push(this.recorder.remove(r));
+        }
+        return _results;
+      }
+    };
+
+    App.prototype.initGui = function() {
+      var folder, item,
+        _this = this;
+      this.gui = new dat.GUI();
+      this.gui_values = new function() {
+        this.timer = 0;
+        return this.delay = 500;
+      };
+      folder = this.gui.addFolder('Elements');
+      item = folder.add(this.gui_values, 'timer', 0, 1);
+      item = folder.add(this.gui_values, 'delay', 0, 5000);
+      item.onChange(function(val) {
+        return _this.recorder.autoRecordDelay = val;
+      });
+      return folder.open();
     };
 
     return App;

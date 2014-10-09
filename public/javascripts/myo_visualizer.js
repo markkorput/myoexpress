@@ -22,7 +22,12 @@
         mesh.position.multiply(new THREE.Vector3(500, 500, 500));
         mesh.myo_record = myo_record;
         _this.meshes.push(mesh);
-        return _this.scene.add(mesh);
+        _this.scene.add(mesh);
+        return myo_record.on('remove', function(model) {
+          mesh = _this._meshForRecord(model);
+          _this.scene.remove(mesh);
+          return _this.meshes = _.without(_this.meshes, model);
+        });
       });
       return this.on('change:highlight', function(obj, value, attr) {
         return _.each(_this.meshes, function(mesh) {
@@ -31,6 +36,11 @@
             return mesh.material.color = _this.activeColor;
           }
         });
+      });
+    },
+    _meshForRecord: function(record) {
+      return _.find(this.meshes, function(mesh) {
+        return mesh.myo_record === record;
       });
     }
   });

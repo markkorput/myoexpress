@@ -10,3 +10,11 @@
 
     if(data != {} && (@length < 1 || data.orientation != @last().get('orientation')))
       @add(@myo_manager.getLastMyoData())
+
+  autoRecDelay: -> @autoRecordDelay || @opts.autoRecordDelay || 1000
+
+  update: ->
+    t = (new Date()).getTime()
+    if(!@lastAutoRecord || t > @lastAutoRecord + @autoRecDelay())
+      @record()
+      @lastAutoRecord = t

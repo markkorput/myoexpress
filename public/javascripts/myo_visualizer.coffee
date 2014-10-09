@@ -25,11 +25,22 @@
       @meshes.push mesh
       @scene.add mesh
 
+      myo_record.on 'remove', (model) =>
+        # console.log model
+        mesh = @_meshForRecord(model)
+        @scene.remove mesh
+        # console.log @meshes.length
+        @meshes = _.without(@meshes, model)
+        # console.log @meshes.length
+
     @on 'change:highlight', (obj, value, attr) =>
       _.each @meshes, (mesh) =>
         mesh.material.color = @passiveColor
         if _.contains(_.flatten([value]), mesh.myo_record.get('target'))
           mesh.material.color = @activeColor
+
+  _meshForRecord: (record) ->
+    _.find @meshes, (mesh) -> mesh.myo_record == record
 
 
 
