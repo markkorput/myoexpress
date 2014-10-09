@@ -27,7 +27,7 @@ io.on('connection', function (socket) {
 // 
 // dummyEmit();
 
-/*var myo = require('./myoClient');
+var myo = require('./myoClient');
 
 myo.on('message', function(message){
   json = JSON.parse(message);
@@ -40,4 +40,3 @@ myo.on('message', function(message){
     io.emit('myo-orientation', data);
   }
 });
-*/

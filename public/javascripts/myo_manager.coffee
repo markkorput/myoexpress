@@ -3,8 +3,7 @@ class @MyoManager
     @options = _opts
     @init()
 
-    @dummyEmit()
-
+    # @dummyEmit()
 
   dummyEmit: =>
     # console.log('Emitting dummy data...')
@@ -20,8 +19,8 @@ class @MyoManager
     @socket = io.connect 'http://localhost'
 
     @socket.on 'myo-orientation', (data) =>
-      #   console.log 'myo-orientation' 
-      #   console.log data
+      # console.log 'myo-orientation' 
+      # console.log data
       @onOrientation data
 
   onOrientation: (data) ->

@@ -14,22 +14,16 @@
       }
     },
     autoRecDelay: function() {
-      return this.autoRecordDelay || this.opts.autoRecordDelay || 1000;
+      return this.autoRecordDelay || this.opts.autoRecordDelay || 1;
     },
-    autoRecDelayPos: function() {
-      var t;
-      if (!this.lastAutoRecord) {
-        return 1.0;
-      }
-      t = (new Date()).getTime();
-      return (t - this.lastAutoRecord) / this.autoRecDelay();
+    delayPercentage: function() {
+      return (this.t || 0.0) / this.autoRecDelay();
     },
-    update: function() {
-      var t;
-      t = (new Date()).getTime();
-      if (this.autoRecDelayPos() >= 1.0) {
+    update: function(dt) {
+      this.t = (this.t || 0) + dt;
+      if (this.t > this.autoRecDelay()) {
         this.record();
-        return this.lastAutoRecord = t;
+        return this.t = 0;
       }
     }
   });

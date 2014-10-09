@@ -7,7 +7,6 @@
       this.dummyEmit = __bind(this.dummyEmit, this);
       this.options = _opts;
       this.init();
-      this.dummyEmit();
     }
 
     MyoManager.prototype.dummyEmit = function() {

@@ -5,11 +5,12 @@ class App
 
     @myoManager = new MyoManager();
     @recorder = new MyoRecorder();
-    @recorder.setup(myo_manager: @myoManager, autoRecordDelay: 1000)
-    @target_system = new TargetSystem(myo_recorder: @recorder, autoNextTarget: true, maxTargets: 4)
+    @recorder.setup(myo_manager: @myoManager, autoRecordDelay: 2)
+    @target_system = new TargetSystem(myo_recorder: @recorder, autoNextTarget: true, maxTargets: 10)
     @visualizer = new MyoVisualizer(myo_recorder: @recorder, scene: @scene)
     @target_system.on 'change:activeTargetIndex', (obj, value, attr) =>
       @visualizer.set(highlight: @target_system.activeTarget().get('name'))
+      @gui_values.currentTarget = value+1
 
     @clock = new THREE.Clock()
     @controls = new THREE.TrackballControls( @camera, @renderer.domElement )
@@ -17,12 +18,11 @@ class App
     $(window).on('keydown', @_keyDown).mousemove(@_mouseMove)#.on('resize', @_resize)
 
   update: ->
-    @controls.update( @clock.getDelta() );
-
+    dt = @clock.getDelta()
+    @controls.update( dt );
     return if @gui_values.paused
-    
-    @recorder.update()
-    @gui_values.timer = @recorder.autoRecDelayPos()
+    @recorder.update(dt)
+    @gui_values.timer = @recorder.delayPercentage()
 
   draw: ->
     @renderer.render(@scene, @camera)
@@ -73,19 +73,22 @@ class App
 
     @gui_values = new ->
       @timer = 0
-      @delay = 1000
+      @delay = 2
       @paused = false
-      @maxTargets = 4
+      @maxTargets = 10
+      @currentTarget = 1
 
     folder = @gui.addFolder 'Elements'
     item = folder.add(@gui_values, 'timer', 0, 1)
     item.listen()
-    item = folder.add(@gui_values, 'delay', 0, 5000)
+    item = folder.add(@gui_values, 'delay', 0, 5)
     item.onChange (val) => @recorder.autoRecordDelay = val
     item = folder.add(@gui_values, 'paused')
     item.listen()
     item = folder.add(@gui_values, 'maxTargets', 1, 30)
     item.onChange (val) => @target_system.set('maxTargets')
+    item = folder.add(@gui_values, 'currentTarget', 1, 10)
+    item.listen()
     folder.open()
 
 

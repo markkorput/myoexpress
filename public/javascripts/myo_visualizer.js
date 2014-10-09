@@ -19,7 +19,7 @@
         material.color = _this.activeColor;
         mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(orientation.x, orientation.y, orientation.z);
-        mesh.position.multiply(new THREE.Vector3(500, 500, 500));
+        mesh.position.multiply(new THREE.Vector3(1000, 1000, 1000));
         mesh.myo_record = myo_record;
         _this.meshes.push(mesh);
         _this.scene.add(mesh);

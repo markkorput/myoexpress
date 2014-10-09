@@ -22,13 +22,13 @@ TargetCollection = Backbone.Collection.extend
     if @get('autoNextTarget')
       @myo_recorder.on 'add', (myo_record) =>
         # if enabled automatically create new targets until maxTargets count is reached
-        console.log @get('maxTargets')
-        console.log @targets.length
+        # console.log @get('maxTargets')
+        # console.log @targets.length
         if @get('maxTargets') && @targets.length < @get('maxTargets')
-          console.log 'new'
+          # console.log 'new'
           @newTarget()
         else
-          console.log 'next'
+          # console.log 'next'
           @nextTarget()
 
 

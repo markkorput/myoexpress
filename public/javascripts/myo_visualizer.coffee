@@ -17,7 +17,7 @@
 
       mesh = new THREE.Mesh(geometry, material)      
       mesh.position.set(orientation.x, orientation.y, orientation.z)
-      mesh.position.multiply(new THREE.Vector3(500, 500, 500))
+      mesh.position.multiply(new THREE.Vector3(1000, 1000, 1000))
 
       # link each mesh to it's originating record, so we can look them up later
       mesh.myo_record = myo_record

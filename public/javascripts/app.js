@@ -16,21 +16,22 @@
       this.recorder = new MyoRecorder();
       this.recorder.setup({
         myo_manager: this.myoManager,
-        autoRecordDelay: 1000
+        autoRecordDelay: 2
       });
       this.target_system = new TargetSystem({
         myo_recorder: this.recorder,
         autoNextTarget: true,
-        maxTargets: 4
+        maxTargets: 10
       });
       this.visualizer = new MyoVisualizer({
         myo_recorder: this.recorder,
         scene: this.scene
       });
       this.target_system.on('change:activeTargetIndex', function(obj, value, attr) {
-        return _this.visualizer.set({
+        _this.visualizer.set({
           highlight: _this.target_system.activeTarget().get('name')
         });
+        return _this.gui_values.currentTarget = value + 1;
       });
       this.clock = new THREE.Clock();
       this.controls = new THREE.TrackballControls(this.camera, this.renderer.domElement);
@@ -39,12 +40,14 @@
     };
 
     App.prototype.update = function() {
-      this.controls.update(this.clock.getDelta());
+      var dt;
+      dt = this.clock.getDelta();
+      this.controls.update(dt);
       if (this.gui_values.paused) {
         return;
       }
-      this.recorder.update();
-      return this.gui_values.timer = this.recorder.autoRecDelayPos();
+      this.recorder.update(dt);
+      return this.gui_values.timer = this.recorder.delayPercentage();
     };
 
     App.prototype.draw = function() {
@@ -104,14 +107,15 @@
       this.gui = new dat.GUI();
       this.gui_values = new function() {
         this.timer = 0;
-        this.delay = 1000;
+        this.delay = 2;
         this.paused = false;
-        return this.maxTargets = 4;
+        this.maxTargets = 10;
+        return this.currentTarget = 1;
       };
       folder = this.gui.addFolder('Elements');
       item = folder.add(this.gui_values, 'timer', 0, 1);
       item.listen();
-      item = folder.add(this.gui_values, 'delay', 0, 5000);
+      item = folder.add(this.gui_values, 'delay', 0, 5);
       item.onChange(function(val) {
         return _this.recorder.autoRecordDelay = val;
       });
@@ -121,6 +125,8 @@
       item.onChange(function(val) {
         return _this.target_system.set('maxTargets');
       });
+      item = folder.add(this.gui_values, 'currentTarget', 1, 10);
+      item.listen();
       return folder.open();
     };
 

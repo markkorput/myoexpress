@@ -23,13 +23,9 @@
       });
       if (this.get('autoNextTarget')) {
         return this.myo_recorder.on('add', function(myo_record) {
-          console.log(_this.get('maxTargets'));
-          console.log(_this.targets.length);
           if (_this.get('maxTargets') && _this.targets.length < _this.get('maxTargets')) {
-            console.log('new');
             return _this.newTarget();
           } else {
-            console.log('next');
             return _this.nextTarget();
           }
         });
