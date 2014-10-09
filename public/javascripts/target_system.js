@@ -16,11 +16,24 @@
       this.myo_recorder = this.get('myo_recorder');
       this.targets = new TargetCollection();
       this.newTarget();
-      return this.myo_recorder.on('add', function(myo_record) {
+      this.myo_recorder.on('add', function(myo_record) {
         return myo_record.set({
           target: _this.activeTarget().get('name')
         });
       });
+      if (this.get('autoNextTarget')) {
+        return this.myo_recorder.on('add', function(myo_record) {
+          console.log(_this.get('maxTargets'));
+          console.log(_this.targets.length);
+          if (_this.get('maxTargets') && _this.targets.length < _this.get('maxTargets')) {
+            console.log('new');
+            return _this.newTarget();
+          } else {
+            console.log('next');
+            return _this.nextTarget();
+          }
+        });
+      }
     },
     newTarget: function() {
       this.targets.add({

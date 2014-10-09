@@ -6,7 +6,7 @@ class App
     @myoManager = new MyoManager();
     @recorder = new MyoRecorder();
     @recorder.setup(myo_manager: @myoManager, autoRecordDelay: 1000)
-    @target_system = new TargetSystem(myo_recorder: @recorder)
+    @target_system = new TargetSystem(myo_recorder: @recorder, autoNextTarget: true, maxTargets: 4)
     @visualizer = new MyoVisualizer(myo_recorder: @recorder, scene: @scene)
     @target_system.on 'change:activeTargetIndex', (obj, value, attr) =>
       @visualizer.set(highlight: @target_system.activeTarget().get('name'))
@@ -75,6 +75,7 @@ class App
       @timer = 0
       @delay = 1000
       @paused = false
+      @maxTargets = 4
 
     folder = @gui.addFolder 'Elements'
     item = folder.add(@gui_values, 'timer', 0, 1)
@@ -83,6 +84,8 @@ class App
     item.onChange (val) => @recorder.autoRecordDelay = val
     item = folder.add(@gui_values, 'paused')
     item.listen()
+    item = folder.add(@gui_values, 'maxTargets', 1, 30)
+    item.onChange (val) => @target_system.set('maxTargets')
     folder.open()
 
 

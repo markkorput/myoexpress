@@ -10,11 +10,27 @@ TargetCollection = Backbone.Collection.extend
   initialize: (opts) ->
     @myo_recorder = @get 'myo_recorder'
 
-    @targets = new TargetCollection()
+    # setup collection and load first target and define first target
+    @targets = new TargetCollection()    
     @newTarget()
 
+    # monitor recorder collection; add target name to every new record
     @myo_recorder.on 'add', (myo_record) =>
       myo_record.set(target: @activeTarget().get('name'))
+
+    # if enabled, switch to next target after every added record
+    if @get('autoNextTarget')
+      @myo_recorder.on 'add', (myo_record) =>
+        # if enabled automatically create new targets until maxTargets count is reached
+        console.log @get('maxTargets')
+        console.log @targets.length
+        if @get('maxTargets') && @targets.length < @get('maxTargets')
+          console.log 'new'
+          @newTarget()
+        else
+          console.log 'next'
+          @nextTarget()
+
 
   newTarget: ->
     # console.log 'Adding: '+ 'Target #'+(@targets.length+1)

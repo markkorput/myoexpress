@@ -19,7 +19,9 @@
         autoRecordDelay: 1000
       });
       this.target_system = new TargetSystem({
-        myo_recorder: this.recorder
+        myo_recorder: this.recorder,
+        autoNextTarget: true,
+        maxTargets: 4
       });
       this.visualizer = new MyoVisualizer({
         myo_recorder: this.recorder,
@@ -103,7 +105,8 @@
       this.gui_values = new function() {
         this.timer = 0;
         this.delay = 1000;
-        return this.paused = false;
+        this.paused = false;
+        return this.maxTargets = 4;
       };
       folder = this.gui.addFolder('Elements');
       item = folder.add(this.gui_values, 'timer', 0, 1);
@@ -114,6 +117,10 @@
       });
       item = folder.add(this.gui_values, 'paused');
       item.listen();
+      item = folder.add(this.gui_values, 'maxTargets', 1, 30);
+      item.onChange(function(val) {
+        return _this.target_system.set('maxTargets');
+      });
       return folder.open();
     };
 
