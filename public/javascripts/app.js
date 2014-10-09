@@ -16,7 +16,7 @@
       this.recorder = new MyoRecorder();
       this.recorder.setup({
         myo_manager: this.myoManager,
-        autoRecordDelay: 500
+        autoRecordDelay: 1000
       });
       this.target_system = new TargetSystem({
         myo_recorder: this.recorder
@@ -37,11 +37,12 @@
     };
 
     App.prototype.update = function() {
-      if (this.paused) {
+      this.controls.update(this.clock.getDelta());
+      if (this.gui_values.paused) {
         return;
       }
-      this.controls.update(this.clock.getDelta());
-      return this.recorder.update();
+      this.recorder.update();
+      return this.gui_values.timer = this.recorder.autoRecDelayPos();
     };
 
     App.prototype.draw = function() {
@@ -71,8 +72,11 @@
     App.prototype._keyDown = function(e) {
       var r, _results;
       console.log('keycode: ' + e.keyCode);
-      if (e.keyCode === 32) {
+      if (e.keyCode === 82) {
         this.recorder.record();
+      }
+      if (e.keyCode === 32) {
+        this.gui_values.paused = !this.gui_values.paused;
       }
       if (e.keyCode === 78) {
         this.target_system.newTarget();
@@ -98,14 +102,18 @@
       this.gui = new dat.GUI();
       this.gui_values = new function() {
         this.timer = 0;
-        return this.delay = 500;
+        this.delay = 1000;
+        return this.paused = false;
       };
       folder = this.gui.addFolder('Elements');
       item = folder.add(this.gui_values, 'timer', 0, 1);
+      item.listen();
       item = folder.add(this.gui_values, 'delay', 0, 5000);
       item.onChange(function(val) {
         return _this.recorder.autoRecordDelay = val;
       });
+      item = folder.add(this.gui_values, 'paused');
+      item.listen();
       return folder.open();
     };
 

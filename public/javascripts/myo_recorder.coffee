@@ -13,8 +13,13 @@
 
   autoRecDelay: -> @autoRecordDelay || @opts.autoRecordDelay || 1000
 
+  autoRecDelayPos: ->
+    return 1.0 if !@lastAutoRecord
+    t = (new Date()).getTime()
+    (t - @lastAutoRecord) / @autoRecDelay()
+
   update: ->
     t = (new Date()).getTime()
-    if(!@lastAutoRecord || t > @lastAutoRecord + @autoRecDelay())
+    if(@autoRecDelayPos() >= 1.0)
       @record()
       @lastAutoRecord = t

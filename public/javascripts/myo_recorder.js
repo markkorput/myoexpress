@@ -16,10 +16,18 @@
     autoRecDelay: function() {
       return this.autoRecordDelay || this.opts.autoRecordDelay || 1000;
     },
+    autoRecDelayPos: function() {
+      var t;
+      if (!this.lastAutoRecord) {
+        return 1.0;
+      }
+      t = (new Date()).getTime();
+      return (t - this.lastAutoRecord) / this.autoRecDelay();
+    },
     update: function() {
       var t;
       t = (new Date()).getTime();
-      if (!this.lastAutoRecord || t > this.lastAutoRecord + this.autoRecDelay()) {
+      if (this.autoRecDelayPos() >= 1.0) {
         this.record();
         return this.lastAutoRecord = t;
       }

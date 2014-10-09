@@ -5,7 +5,7 @@ class App
 
     @myoManager = new MyoManager();
     @recorder = new MyoRecorder();
-    @recorder.setup(myo_manager: @myoManager, autoRecordDelay: 500)
+    @recorder.setup(myo_manager: @myoManager, autoRecordDelay: 1000)
     @target_system = new TargetSystem(myo_recorder: @recorder)
     @visualizer = new MyoVisualizer(myo_recorder: @recorder, scene: @scene)
     @target_system.on 'change:activeTargetIndex', (obj, value, attr) =>
@@ -17,9 +17,12 @@ class App
     $(window).on('keydown', @_keyDown).mousemove(@_mouseMove)#.on('resize', @_resize)
 
   update: ->
-    return if @paused
     @controls.update( @clock.getDelta() );
+
+    return if @gui_values.paused
+    
     @recorder.update()
+    @gui_values.timer = @recorder.autoRecDelayPos()
 
   draw: ->
     @renderer.render(@scene, @camera)
@@ -44,8 +47,12 @@ class App
 
   _keyDown: (e) =>
     console.log 'keycode: ' + e.keyCode
-    if(e.keyCode == 32) # space
+
+    if(e.keyCode == 82) # 'r'
       @recorder.record()
+
+    if(e.keyCode == 32) # space
+      @gui_values.paused = (!@gui_values.paused)      
 
     if(e.keyCode == 78) # 'n'
       @target_system.newTarget()
@@ -60,17 +67,22 @@ class App
       while r = @recorder.first()
         @recorder.remove(r)
 
+
   initGui: ->
     @gui = new dat.GUI() # ({autoPlace:true});
 
     @gui_values = new ->
       @timer = 0
-      @delay = 500
+      @delay = 1000
+      @paused = false
 
     folder = @gui.addFolder 'Elements'
     item = folder.add(@gui_values, 'timer', 0, 1)
+    item.listen()
     item = folder.add(@gui_values, 'delay', 0, 5000)
     item.onChange (val) => @recorder.autoRecordDelay = val
+    item = folder.add(@gui_values, 'paused')
+    item.listen()
     folder.open()
 
 
