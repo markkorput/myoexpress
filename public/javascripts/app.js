@@ -25,7 +25,9 @@
       });
       this.visualizer = new MyoVisualizer({
         myo_recorder: this.recorder,
-        scene: this.scene
+        scene: this.scene,
+        myo_manager: this.myoManager,
+        ghost: true
       });
       this.target_system.on('change:activeTargetIndex', function(obj, value, attr) {
         _this.visualizer.set({
@@ -110,7 +112,8 @@
         this.delay = 2;
         this.paused = false;
         this.maxTargets = 10;
-        return this.currentTarget = 1;
+        this.currentTarget = 1;
+        return this.ghost = true;
       };
       folder = this.gui.addFolder('Elements');
       item = folder.add(this.gui_values, 'timer', 0, 1);
@@ -127,6 +130,12 @@
       });
       item = folder.add(this.gui_values, 'currentTarget', 1, 10);
       item.listen();
+      item = folder.add(this.gui_values, 'ghost');
+      item.onChange(function(val) {
+        return _this.visualizer.set({
+          ghost: val
+        });
+      });
       return folder.open();
     };
 

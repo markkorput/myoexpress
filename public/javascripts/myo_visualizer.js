@@ -2,22 +2,24 @@
 (function() {
   this.MyoVisualizer = Backbone.Model.extend({
     initialize: function() {
-      var _this = this;
+      var material,
+        _this = this;
       this.scene = this.get('scene');
       this.myo_recorder = this.get('myo_recorder');
       this.meshes = [];
       this.passiveColor = new THREE.Color(0x0000aa);
       this.activeColor = new THREE.Color(0xffffff);
+      this.ghostColor = new THREE.Color(0xaa0000);
+      this.geometry = new THREE.SphereGeometry(50, 10, 10);
       this.myo_recorder.on('add', function(myo_record) {
-        var geometry, material, mesh, orientation;
+        var material, mesh, orientation;
         orientation = myo_record.get('orientation');
         if (!orientation) {
           return;
         }
-        geometry = new THREE.SphereGeometry(50, 10, 10);
         material = new THREE.LineBasicMaterial();
         material.color = _this.activeColor;
-        mesh = new THREE.Mesh(geometry, material);
+        mesh = new THREE.Mesh(_this.geometry, material);
         mesh.position.set(orientation.x, orientation.y, orientation.z);
         mesh.position.multiply(new THREE.Vector3(1000, 1000, 1000));
         mesh.myo_record = myo_record;
@@ -29,13 +31,39 @@
           return _this.meshes = _.without(_this.meshes, model);
         });
       });
-      return this.on('change:highlight', function(obj, value, attr) {
+      material = new THREE.LineBasicMaterial();
+      material.color = this.ghostColor;
+      this.ghost_mesh = new THREE.Mesh(this.geometry, material);
+      this.ghost_mesh.material.color = this.ghostColor;
+      this.on('change:highlight', function(obj, value, attr) {
         return _.each(_this.meshes, function(mesh) {
           mesh.material.color = _this.passiveColor;
           if (_.contains(_.flatten([value]), mesh.myo_record.get('target'))) {
             return mesh.material.color = _this.activeColor;
           }
         });
+      });
+      if (this.get('myo_manager')) {
+        this.get('myo_manager').socket.on('myo-orientation', function(data) {
+          var orientation;
+          if (!_this.get('ghost')) {
+            return;
+          }
+          orientation = data.orientation;
+          _this.ghost_mesh.position.set(orientation.x, orientation.y, orientation.z);
+          return _this.ghost_mesh.position.multiply(new THREE.Vector3(1000, 1000, 1000));
+        });
+      }
+      if (this.get('ghost')) {
+        console.log(this.ghost_mesh);
+        this.scene.add(this.ghost_mesh);
+      }
+      return this.on('change:ghost', function(obj, val, attr) {
+        if (val) {
+          return _this.scene.add(_this.ghost_mesh);
+        } else {
+          return _this.scene.remove(_this.ghost_mesh);
+        }
       });
     },
     _meshForRecord: function(record) {
