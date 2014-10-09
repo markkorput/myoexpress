@@ -43,7 +43,7 @@
           }
         });
       });
-      if (this.get('myo_manager')) {
+      if (this.get('myo_manager') && this.get('myo_manager').socket) {
         this.get('myo_manager').socket.on('myo-orientation', function(data) {
           var orientation;
           if (!_this.get('ghost')) {

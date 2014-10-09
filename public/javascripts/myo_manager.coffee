@@ -16,12 +16,14 @@ class @MyoManager
     setTimeout(@dummyEmit, 500);
 
   init: ->
-    @socket = io.connect 'http://localhost'
+    if typeof(io) != 'undefined'
+      @socket = io.connect 'http://localhost'
 
-    @socket.on 'myo-orientation', (data) =>
-      # console.log 'myo-orientation' 
-      # console.log data
-      @onOrientation data
+    if @socket    
+      @socket.on 'myo-orientation', (data) =>
+        # console.log 'myo-orientation' 
+        # console.log data
+        @onOrientation data
 
   onOrientation: (data) ->
     @lastMyoData = data

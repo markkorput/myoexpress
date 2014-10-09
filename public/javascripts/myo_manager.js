@@ -22,10 +22,14 @@
 
     MyoManager.prototype.init = function() {
       var _this = this;
-      this.socket = io.connect('http://localhost');
-      return this.socket.on('myo-orientation', function(data) {
-        return _this.onOrientation(data);
-      });
+      if (typeof io !== 'undefined') {
+        this.socket = io.connect('http://localhost');
+      }
+      if (this.socket) {
+        return this.socket.on('myo-orientation', function(data) {
+          return _this.onOrientation(data);
+        });
+      }
     };
 
     MyoManager.prototype.onOrientation = function(data) {

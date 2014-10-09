@@ -43,7 +43,7 @@
         if _.contains(_.flatten([value]), mesh.myo_record.get('target'))
           mesh.material.color = @activeColor
 
-    if @get('myo_manager')
+    if @get('myo_manager') && @get('myo_manager').socket
       @get('myo_manager').socket.on 'myo-orientation', (data) => 
         return if !@get('ghost')
         orientation = data.orientation
