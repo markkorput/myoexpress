@@ -116,7 +116,7 @@
         this.ghost = true;
         return this.fakeData = false;
       };
-      folder = this.gui.addFolder('Elements');
+      folder = this.gui.addFolder('Timing');
       item = folder.add(this.gui_values, 'timer', 0, 1);
       item.listen();
       item = folder.add(this.gui_values, 'delay', 0, 5);
@@ -125,6 +125,8 @@
       });
       item = folder.add(this.gui_values, 'paused');
       item.listen();
+      folder.open();
+      folder = this.gui.addFolder('Targets');
       item = folder.add(this.gui_values, 'maxTargets', 1, 30);
       item.onChange(function(val) {
         return _this.target_system.set('maxTargets');
@@ -137,6 +139,8 @@
           ghost: val
         });
       });
+      folder.open();
+      folder = this.gui.addFolder('Debug');
       item = folder.add(this.gui_values, 'fakeData');
       item.onChange(function(val) {
         return _this.myoManager.enableDummyData(val);

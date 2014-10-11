@@ -81,22 +81,25 @@ class App
       @fakeData = false
 
 
-    folder = @gui.addFolder 'Elements'
+    folder = @gui.addFolder 'Timing'
     item = folder.add(@gui_values, 'timer', 0, 1)
     item.listen()
     item = folder.add(@gui_values, 'delay', 0, 5)
     item.onChange (val) => @recorder.autoRecordDelay = val
     item = folder.add(@gui_values, 'paused')
     item.listen()
+    folder.open()
+    folder = @gui.addFolder 'Targets'
     item = folder.add(@gui_values, 'maxTargets', 1, 30)
     item.onChange (val) => @target_system.set('maxTargets')
     item = folder.add(@gui_values, 'currentTarget', 1, 10)
     item.listen()
     item = folder.add(@gui_values, 'ghost')
     item.onChange (val) => @visualizer.set(ghost: val)
+    folder.open()
+    folder = @gui.addFolder 'Debug'
     item = folder.add(@gui_values, 'fakeData')
     item.onChange (val) => @myoManager.enableDummyData(val)
-
     folder.open()
 
 
