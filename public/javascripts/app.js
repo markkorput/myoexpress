@@ -113,7 +113,8 @@
         this.paused = false;
         this.maxTargets = 10;
         this.currentTarget = 1;
-        return this.ghost = true;
+        this.ghost = true;
+        return this.fakeData = false;
       };
       folder = this.gui.addFolder('Elements');
       item = folder.add(this.gui_values, 'timer', 0, 1);
@@ -135,6 +136,10 @@
         return _this.visualizer.set({
           ghost: val
         });
+      });
+      item = folder.add(this.gui_values, 'fakeData');
+      item.onChange(function(val) {
+        return _this.myoManager.enableDummyData(val);
       });
       return folder.open();
     };

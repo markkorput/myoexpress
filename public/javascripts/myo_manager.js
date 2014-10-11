@@ -9,17 +9,6 @@
       this.init();
     }
 
-    MyoManager.prototype.dummyEmit = function() {
-      this.onOrientation({
-        orientation: {
-          x: Math.random(),
-          y: Math.random(),
-          z: Math.random()
-        }
-      });
-      return setTimeout(this.dummyEmit, 500);
-    };
-
     MyoManager.prototype.init = function() {
       var _this = this;
       if (typeof io !== 'undefined') {
@@ -38,6 +27,25 @@
 
     MyoManager.prototype.getLastMyoData = function() {
       return this.lastMyoData || {};
+    };
+
+    MyoManager.prototype.enableDummyData = function(_enable) {
+      if (_enable === true || _enable === void 0) {
+        return this.scheduledDummyData = setTimeout(this.dummyEmit, 500);
+      } else {
+        return clearTimeout(this.scheduledDummyData);
+      }
+    };
+
+    MyoManager.prototype.dummyEmit = function() {
+      this.onOrientation({
+        orientation: {
+          x: Math.random(),
+          y: Math.random(),
+          z: Math.random()
+        }
+      });
+      return this.enableDummyData();
     };
 
     return MyoManager;

@@ -3,18 +3,6 @@ class @MyoManager
     @options = _opts
     @init()
 
-    # @dummyEmit()
-
-  dummyEmit: =>
-    # console.log('Emitting dummy data...')
-    @onOrientation
-      orientation:
-        x: Math.random()
-        y: Math.random()
-        z: Math.random()
-
-    setTimeout(@dummyEmit, 500);
-
   init: ->
     if typeof(io) != 'undefined'
       @socket = io.connect 'http://localhost'
@@ -30,3 +18,18 @@ class @MyoManager
 
   getLastMyoData: ->
     @lastMyoData || {}
+
+  enableDummyData: (_enable) ->
+    if _enable == true || _enable == undefined
+      @scheduledDummyData = setTimeout(@dummyEmit, 500)
+    else
+      clearTimeout(@scheduledDummyData)
+
+  dummyEmit: =>
+    # console.log('Emitting dummy data...')
+    @onOrientation
+      orientation:
+        x: Math.random()
+        y: Math.random()
+        z: Math.random()
+    @enableDummyData()

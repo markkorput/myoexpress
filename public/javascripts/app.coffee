@@ -78,6 +78,8 @@ class App
       @maxTargets = 10
       @currentTarget = 1
       @ghost = true
+      @fakeData = false
+
 
     folder = @gui.addFolder 'Elements'
     item = folder.add(@gui_values, 'timer', 0, 1)
@@ -92,6 +94,9 @@ class App
     item.listen()
     item = folder.add(@gui_values, 'ghost')
     item.onChange (val) => @visualizer.set(ghost: val)
+    item = folder.add(@gui_values, 'fakeData')
+    item.onChange (val) => @myoManager.enableDummyData(val)
+
     folder.open()
 
 
