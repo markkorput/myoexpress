@@ -3,9 +3,15 @@
     @scene = @get 'scene'
     @myo_recorder = @get 'myo_recorder'
     @meshes = []
-    @passiveColor = new THREE.Color( 0x0000aa)
-    @activeColor = new THREE.Color( 0xffffff )
-    @ghostColor = new THREE.Color( 0xaa0000 )
+
+
+
+    @passiveColor = new THREE.Color(Please.make_color(golden: false, hue: 12, saturation: .5, value: .8)[0])
+    @activeColor = new THREE.Color(Please.make_color(golden: false, hue: 300, saturation: 1.0, value: .8)[0])
+    @ghostColor = new THREE.Color(Please.make_color(golden: false, hue: 300, saturation: 0.8, value: .4)[0])
+
+
+
     @geometry = new THREE.SphereGeometry(50, 10, 10)
 
     @myo_recorder.on 'add', (myo_record) =>

@@ -7,9 +7,24 @@
       this.scene = this.get('scene');
       this.myo_recorder = this.get('myo_recorder');
       this.meshes = [];
-      this.passiveColor = new THREE.Color(0x0000aa);
-      this.activeColor = new THREE.Color(0xffffff);
-      this.ghostColor = new THREE.Color(0xaa0000);
+      this.passiveColor = new THREE.Color(Please.make_color({
+        golden: false,
+        hue: 12,
+        saturation: .5,
+        value: .8
+      })[0]);
+      this.activeColor = new THREE.Color(Please.make_color({
+        golden: false,
+        hue: 300,
+        saturation: 1.0,
+        value: .8
+      })[0]);
+      this.ghostColor = new THREE.Color(Please.make_color({
+        golden: false,
+        hue: 300,
+        saturation: 0.8,
+        value: .4
+      })[0]);
       this.geometry = new THREE.SphereGeometry(50, 10, 10);
       this.myo_recorder.on('add', function(myo_record) {
         var material, mesh, orientation;
